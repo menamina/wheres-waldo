@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Person {
+  id Int @id @default(autoincrement())
+  name String
+  location String
+
+  players Player[]
+
+}
+
+model Player {
+  id Int @id @default(autoincrement())
+  start Int
+  end Int
+  
+  found Person[]
+
+}
