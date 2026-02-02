@@ -6,6 +6,8 @@ function Waldo() {
   const [selected, setSelected] = useState(null);
   const [found, updateFound] = useState([]);
   const [wrong, setWrong] = useState("");
+  const [won, setWon] = useState("")
+  const allChars = ["waldo", "wilma", "wizard"]
 
   // useEffect(() => {
   //   async function startTimer() {
@@ -46,6 +48,15 @@ function Waldo() {
       }),
     });
     const jsonres = await fetch.json();
+    if (!jsonres.ok){
+      return console.log("server err")
+    } else {
+      jsonres.message === false ? setWrong("big whomp") : updateFound((prev) => ...prev, jsonres.person )
+      const allFound = allChars.every((char) => found.includes(char))
+      if (allFound) {
+        setWon("YOU FOUND THEM ALL :O")
+      }
+    }
   }
 
   return (
