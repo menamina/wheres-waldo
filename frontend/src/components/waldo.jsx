@@ -3,6 +3,7 @@ import waldoimg from "../assets/waldo.jpeg";
 
 function Waldo() {
   const [timer, updateTimer] = useState("");
+  const [selected, setSelected] = useState(null);
   const [found, updateFound] = useState([]);
   const [wrong, setWrong] = useState("");
 
@@ -19,19 +20,21 @@ function Waldo() {
     e.preventDefault();
 
     const img = document.querySelector(".img");
-    const rect = img.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const imgBound = img.current.getBoundingClientRect();
+    const x = e.clientX - imgBound.left;
+    const y = e.clientY - imgBound.top;
 
     const clickDiv = document.querySelector(".click");
+    const formDiv = document.querySelector(".form");
 
     clickDiv.style.left = `${x}px`;
     clickDiv.style.right = `${y}px`;
 
     clickDiv.classList.remove("hidden");
+    formDiv.classList.remove("hidden");
 
-    const xNorm = x / rect.width;
-    const yNorm = y / rect.height;
+    const xNorm = x / imgBound.width;
+    const yNorm = y / imgBound.height;
 
     const fetch = await fetch("http://localhost:5555/click", {
       method: "POST",
@@ -39,17 +42,10 @@ function Waldo() {
       body: JSON.stringify({
         x: xNorm,
         y: yNorm,
-        person: selected
-      })
-
+        person: selected,
+      }),
     });
     const jsonres = await fetch.json();
-    if (!jsonres) {
-      return console.log("whoops")
-    } jsonres.message === "wrong" ? setWrong("WHOMP WHOMP INCORRECT") : 
-
-
-
   }
 
   return (
@@ -61,12 +57,15 @@ function Waldo() {
         onClick={handleClick}
       ></img>
       <div className="click hidden"></div>
-      <form>
-        <select name="person">
+      <form className="form">
+        <select
+          name="person"
+          value={selected}
+          onChange={(e) => setSelected(e.target.value)}
+        >
           <option value="waldo">Waldo</option>
           <option value="wilma">Waldo</option>
           <option value="wizard">Waldo</option>
-
         </select>
       </form>
     </div>
