@@ -31,7 +31,6 @@ async function isClickABullseye(req, res) {
     }
   } catch (error) {
     console.log("error @ isClickABullseye", error.message);
-    res.status(500).json({ message: false, error: "server error" });
   }
 }
 

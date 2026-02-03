@@ -11,7 +11,14 @@ function Waldo() {
   const [found, updateFound] = useState([]);
   const [wrong, setWrong] = useState("");
   const [won, setWon] = useState("");
-  const allChars = ["waldo", "wilma", "wizard"];
+  const allChars = ["Waldo", "Wilma", "Wizard"];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setWrong(null);
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, [wrong]);
 
   useEffect(() => {
     function markFoundPerson() {
@@ -33,6 +40,8 @@ function Waldo() {
   }, [found]);
 
   useEffect(() => {
+    setWrong("");
+    if (!selected) return;
     async function clickedPerson() {
       const res = await fetch("http://localhost:5555/click", {
         method: "POST",
@@ -44,7 +53,7 @@ function Waldo() {
         }),
       });
       const jsonres = await res.json();
-      if (!jsonres.ok) {
+      if (!res.ok) {
         return console.log("server err");
       } else {
         jsonres.message === false
@@ -105,9 +114,9 @@ function Waldo() {
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
         >
-          <option value="waldo">Waldo</option>
-          <option value="wilma">Wilma</option>
-          <option value="wizard">Wizard</option>
+          <option value="Waldo">Waldo</option>
+          <option value="Wilma">Wilma</option>
+          <option value="Wizard">Wizard</option>
         </select>
       </form>
     </div>
