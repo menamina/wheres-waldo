@@ -9,20 +9,18 @@ img {
 
 .click {
   position: absolute;
-  border: 1px solid black;
-  width: 5px;
-  height: 5px;
+  border: 2px solid black;
+  width: 30px;
+  height: 30px;
 }
 
 .form {
   position: absolute;
-  width: 15px;
-  height: 20px;
 }
 
 .markPerson {
   position: absolute;
-  border: 1px solid green;
-  width: 5px;
-  height: 5px;
+  border: 2px solid green;
+  width: 20px;
+  height: 20px;
 }
