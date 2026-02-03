@@ -2,7 +2,13 @@ const express = require("express");
 const server = express();
 const port = process.env.PORT || 5555;
 const routes = require("./routes/routes");
+const cors = require("cors");
 
+server.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 server.use(express.json());
 server.use("/", routes);
 

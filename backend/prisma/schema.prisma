@@ -10,10 +10,10 @@ datasource db {
 model Person {
   id Int @id @default(autoincrement())
   name String
-  xMin Int
-  xMax Int 
-  yMin Int
-  yMax Int
+  xMin Float
+  xMax Float 
+  yMin Float
+  yMax Float
 
   players Player[]
 
@@ -21,8 +21,8 @@ model Person {
 
 model Player {
   id Int @id @default(autoincrement())
-  start Int
-  end Int
+  start Float
+  end Float
   
   found Person[]
 

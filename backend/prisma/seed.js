@@ -19,7 +19,6 @@ async function seed() {
         yMax: 0.4019,
       },
     ],
-    skipDuplicates: true,
   });
 
   console.log("seeding complete");

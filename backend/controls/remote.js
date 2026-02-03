@@ -12,6 +12,8 @@ async function isClickABullseye(req, res) {
       },
     });
 
+    console.log(character);
+
     const xMin = character.xMin;
     const xMax = character.xMax;
     const yMin = character.yMin;
