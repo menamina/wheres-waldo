@@ -3,41 +3,64 @@ import waldoimg from "../assets/waldo.jpeg";
 
 function Waldo() {
   const [timer, updateTimer] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
+  const [x, setX] = useState("");
+  const [y, setY] = useState("");
+  const [xNorm, setXNorm] = useState("");
+  const [yNorm, setYNorm] = useState("");
   const [found, updateFound] = useState([]);
   const [wrong, setWrong] = useState("");
-  const [won, setWon] = useState("")
-  const allChars = ["waldo", "wilma", "wizard"]
+  const [won, setWon] = useState("");
+  const allChars = ["waldo", "wilma", "wizard"];
 
-  // useEffect(() => {
-  //   async function startTimer() {
-  //     const res = await fetch("http://localhost:5555/");
-  //     const data = await res.json();
-  //     data ? "hi" : null;
-  //   }
-  //   startTimer();
-  // }, []);
+  useEffect(() => {
+    function markFoundPerson() {
+      const mainDiv = document.querySelector(".main");
+
+      const markPerson = document.createElement("div");
+      markPerson.classList.add("markedPerson");
+
+      mainDiv.appendChild(markPerson);
+
+      const allFound = allChars.every((char) => found.includes(char));
+      if (allFound) {
+        setWon("YOU FOUND THEM ALL :O");
+      }
+    }
+    markFoundPerson();
+  }, [found]);
 
   async function handleClick(e) {
     e.preventDefault();
 
     const img = document.querySelector(".img");
     const imgBound = img.current.getBoundingClientRect();
-    const x = e.clientX - imgBound.left;
-    const y = e.clientY - imgBound.top;
+    const xClick = e.clientX - imgBound.left;
+    const yClick = e.clientY - imgBound.top;
+    const xN = xClick / imgBound.width;
+    const yN = yClick / imgBound.height;
+
+    setX(xClick);
+    setY(yClick);
+    setXNorm(xN);
+    setYNorm(yN);
 
     const clickDiv = document.querySelector(".click");
     const formDiv = document.querySelector(".form");
 
-    clickDiv.style.left = `${x}px`;
-    clickDiv.style.right = `${y}px`;
+    clickDiv.style.left = `${xClick}px`;
+    clickDiv.style.top = `${yClick}px`;
 
     clickDiv.classList.remove("hidden");
     formDiv.classList.remove("hidden");
 
-    const xNorm = x / imgBound.width;
-    const yNorm = y / imgBound.height;
+    const xPlus5 = xClick + 5;
+    const yPlus5 = yClick + 5;
+    formDiv.style.left = `${xPlus5}px`;
+    formDiv.style.right = `${yPlus5}px`;
+  }
 
+  async function clickedPerson() {
     const fetch = await fetch("http://localhost:5555/click", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -48,19 +71,21 @@ function Waldo() {
       }),
     });
     const jsonres = await fetch.json();
-    if (!jsonres.ok){
-      return console.log("server err")
+    if (!jsonres.ok) {
+      return console.log("server err");
     } else {
-      jsonres.message === false ? setWrong("big whomp") : updateFound((prev) => ...prev, jsonres.person )
-      const allFound = allChars.every((char) => found.includes(char))
-      if (allFound) {
-        setWon("YOU FOUND THEM ALL :O")
-      }
+      jsonres.message === false
+        ? setWrong("big whomp")
+        : updateFound((prev) => [...prev, jsonres.person]);
+      const formDiv = document.querySelector(".form");
+      formDiv.classList.add("hidden");
     }
   }
 
   return (
     <div className="main">
+      {won ? <div>{won}</div> : null}
+      {wrong ? <div>{wrong}</div> : null}
       <img
         className="img"
         src={waldoimg}
@@ -73,6 +98,7 @@ function Waldo() {
           name="person"
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
+          onClick={clickedPerson}
         >
           <option value="waldo">Waldo</option>
           <option value="wilma">Waldo</option>
