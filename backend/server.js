@@ -6,10 +6,10 @@ const routes = require("./routes/routes");
 server.use(express.json());
 server.use("/", routes);
 
-server.listen(port, (error) => {
-  if (error) {
-    console.log("whomp :(");
-  } else {
+server
+  .listen(port, () => {
     console.log(`Server listening on port ${port}`);
-  }
-});
+  })
+  .on("error", (err) => {
+    console.error("Failed to start server:", err.message);
+  });

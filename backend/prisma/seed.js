@@ -13,7 +13,7 @@ async function seed() {
       },
       {
         name: "Wilma",
-        xxMin: 0.7695,
+        xMin: 0.7695,
         xMax: 0.7785,
         yMin: 0.3869,
         yMax: 0.4019,

@@ -1,9 +1,12 @@
-const prisma = require("../prisma/client");
+const { prisma } = require("../prisma/client");
 
 async function isClickABullseye(req, res) {
   try {
     const { x, y, person } = req.body;
-    const character = prisma.person.findUnique({
+    const clickX = Number(x);
+    const clickY = Number(y);
+
+    const character = await prisma.person.findUnique({
       where: {
         name: person,
       },
@@ -14,7 +17,7 @@ async function isClickABullseye(req, res) {
     const yMin = character.yMin;
     const yMax = character.yMax;
 
-    if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
+    if (clickX >= xMin && clickX <= xMax && clickY >= yMin && clickY <= yMax) {
       return res.json({
         message: true,
         person: character.name,
@@ -26,6 +29,7 @@ async function isClickABullseye(req, res) {
     }
   } catch (error) {
     console.log("error @ isClickABullseye", error.message);
+    res.status(500).json({ message: false, error: "server error" });
   }
 }
 
