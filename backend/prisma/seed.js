@@ -21,10 +21,10 @@ async function seed() {
     ],
   });
 
-  await prisma.player.create({
-    data: {
-      start: 0,
-    },
+  await prisma.player.upsert({
+    where: { id: 1 },
+    update: { start: 0, end: 0 },
+    create: { id: 1, start: 0, end: 0 },
   });
 
   console.log("seeding complete");
