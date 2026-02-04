@@ -1,5 +1,23 @@
 const { prisma } = require("../prisma/client");
 
+async function startTimer(req, res) {
+  try {
+    const player = await prisma.player.findUnique({
+      where: {
+        id: 1,
+      },
+    });
+
+    if (player) {
+      res.json({
+        startTime: player.start,
+      });
+    }
+  } catch (error) {
+    console.log("error @ startTime", error.message);
+  }
+}
+
 async function isClickABullseye(req, res) {
   try {
     const { x, y, person } = req.body;
@@ -34,6 +52,15 @@ async function isClickABullseye(req, res) {
   }
 }
 
+async function stopTimer(req, res) {
+  try {
+  } catch (error) {
+    console.log("error @ endTime", error.message);
+  }
+}
+
 module.exports = {
+  startTimer,
   isClickABullseye,
+  stopTimer,
 };

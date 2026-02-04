@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
-// import Timer from "../components/Timer";
 import Waldo from "./components/waldo";
 import "./assets/css.css";
 

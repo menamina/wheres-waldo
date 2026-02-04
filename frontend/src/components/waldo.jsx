@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import waldoimg from "../assets/waldo.jpeg";
 
 function Waldo() {
-  // const [timer, updateTimer] = useState("");
+  const [startTime, setStart] = useState(false);
+  const [endTime, setEnd] = useState(false);
   const [selected, setSelected] = useState("");
   const [x, setX] = useState("");
   const [y, setY] = useState("");
@@ -14,6 +15,23 @@ function Waldo() {
   const allChars = ["Waldo", "Wilma", "Wizard"];
 
   useEffect(() => {
+    async function startTimer() {
+      try {
+        const res = await fetch("http://localhost:5555/start");
+        const data = await res.json();
+        if (!res.ok) {
+          return console.log("res not okay");
+        } else {
+          data.starTime === 0 ? setStart(Date.now()) : null;
+        }
+      } catch (error) {
+        console.log("error!!!!", error.message);
+      }
+    }
+    startTimer();
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setWrong(null);
     }, 15000);
@@ -21,7 +39,7 @@ function Waldo() {
   }, [wrong]);
 
   useEffect(() => {
-    function markFoundPerson() {
+    async function markFoundPerson() {
       const mainDiv = document.querySelector(".main");
 
       const markPerson = document.createElement("div");
@@ -34,6 +52,21 @@ function Waldo() {
       const allFound = allChars.every((char) => found.includes(char));
       if (allFound) {
         setWon("YOU FOUND THEM ALL :O");
+        const elapsed = startTime
+          ? Math.floor((Date.now() - startTime) / 1000)
+          : 0;
+
+        const res = await fetch("http://localhost:5555/stop", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            elapsed: elapsed,
+          }),
+        });
+
+        if (!res.ok) {
+          return console.log("err w stop timer");
+        }
       }
     }
     markFoundPerson();
@@ -99,6 +132,7 @@ function Waldo() {
 
   return (
     <div className="main">
+      <div className="timer"></div>
       {won ? <div>{won}</div> : null}
       {wrong ? <div>{wrong}</div> : null}
       <img
@@ -111,8 +145,10 @@ function Waldo() {
       <form className="form">
         <select
           name="person"
-          value={selected}
-          onChange={(e) => setSelected(e.target.value)}
+          onChange={(e) => {
+            setSelected("");
+            setSelected(e.target.value);
+          }}
         >
           <option value="Waldo">Waldo</option>
           <option value="Wilma">Wilma</option>

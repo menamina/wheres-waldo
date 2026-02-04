@@ -21,6 +21,12 @@ async function seed() {
     ],
   });
 
+  await prisma.player.create({
+    data: {
+      start: 0,
+    },
+  });
+
   console.log("seeding complete");
 }
 
