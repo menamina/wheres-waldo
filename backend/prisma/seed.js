@@ -1,4 +1,4 @@
-const { prisma } = require("./client");
+const prisma = require("./client");
 
 async function seed() {
   await prisma.person.createMany({
