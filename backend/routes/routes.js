@@ -4,6 +4,6 @@ const remote = require("../controls/remote");
 
 router.get("/start", remote.startTimer);
 router.post("/click", remote.isClickABullseye);
-router.post("/stop", remote.stopTimer);
+router.patch("/stop", remote.stopTimer);
 
 module.exports = router;

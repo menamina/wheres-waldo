@@ -24,7 +24,7 @@ async function isClickABullseye(req, res) {
     const clickX = Number(x);
     const clickY = Number(y);
 
-    const character = await prisma.person.findUnique({
+    const character = await prisma.person.findFirst({
       where: {
         name: person,
       },
@@ -54,6 +54,15 @@ async function isClickABullseye(req, res) {
 
 async function stopTimer(req, res) {
   try {
+    const { elapsed } = req.body;
+    const player = await prisma.player.update({
+      where: {
+        id: 1,
+      },
+      data: {
+        end: elapsed,
+      },
+    });
   } catch (error) {
     console.log("error @ endTime", error.message);
   }
