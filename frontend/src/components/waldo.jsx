@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import waldoimg from "../assets/waldo.jpeg";
 
 function Waldo() {
-  const [startTime, setStart] = useState(false);
-  const [endTime, setEnd] = useState(false);
+  const [startTime, setStart] = useState("");
+  const [elapsed, setElapsed] = useState(0);
   const [selected, setSelected] = useState("");
   const [x, setX] = useState("");
   const [y, setY] = useState("");
@@ -22,7 +22,9 @@ function Waldo() {
         if (!res.ok) {
           return console.log("res not okay");
         } else {
-          data.starTime === 0 ? setStart(Date.now()) : null;
+          if (data.startTime === 0) {
+            setStart(Date.now());
+          }
         }
       } catch (error) {
         console.log("error!!!!", error.message);
@@ -30,6 +32,16 @@ function Waldo() {
     }
     startTimer();
   }, []);
+
+  useEffect(() => {
+    if (!startTime) return;
+
+    const interval = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startTime]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -51,13 +63,13 @@ function Waldo() {
 
       const allFound = allChars.every((char) => found.includes(char));
       if (allFound) {
-        setWon("YOU FOUND THEM ALL :O");
-        const elapsed = startTime
-          ? Math.floor((Date.now() - startTime) / 1000)
-          : 0;
+        setStart(null);
+        setWon(
+          `YOU FOUND THEM ALL :O AND IT ONLY TOOK YOU ... ${elapsed} SECONDS!`,
+        );
 
         const res = await fetch("http://localhost:5555/stop", {
-          method: "POST",
+          method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             elapsed: elapsed,
@@ -132,7 +144,7 @@ function Waldo() {
 
   return (
     <div className="main">
-      <div className="timer"></div>
+      {startTime ? <div className="timer">{elapsed}</div> : null}
       {won ? <div>{won}</div> : null}
       {wrong ? <div>{wrong}</div> : null}
       <img
