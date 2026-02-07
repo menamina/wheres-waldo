@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { isClickABullseye, stopTimer } = require("../controllers/remote");
+const { isClickABullseye, stopTimer } = require("../controls/remote");
 
 router.get("/start", (req, res) => {
   res.json({
@@ -10,6 +10,6 @@ router.get("/start", (req, res) => {
 
 router.post("/click", isClickABullseye);
 
-router.patch("/stop", remote.stopTimer);
+router.patch("/stop", stopTimer);
 
 module.exports = router;
