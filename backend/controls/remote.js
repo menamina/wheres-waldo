@@ -63,8 +63,10 @@ async function stopTimer(req, res) {
         end: elapsed,
       },
     });
+    return res.json({ message: "timer stopped", player });
   } catch (error) {
     console.log("error @ endTime", error.message);
+    return res.status(500).json({ error: "failed to stop timer" });
   }
 }
 
